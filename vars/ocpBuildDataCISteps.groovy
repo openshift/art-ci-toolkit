@@ -20,7 +20,7 @@ def call() {
             if (modifiedFiles.isEmpty()) {
                 sh "echo 'No files to validate' > results.txt"
             } else {
-                echo "test for new commit"
+                echo "test for new commit 1"
                 results = sh(
                     returnStdout: true, 
                     script: "validate-ocp-build-data ${modifiedFiles.join(" ")}"
