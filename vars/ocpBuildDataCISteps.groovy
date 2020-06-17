@@ -25,11 +25,9 @@ def call() {
                     returnStdout: true, 
                     script: "validate-ocp-build-data ${modifiedFiles.join(" ")}"
                 )
+                echo "${results}"
             }
         }
-        writeFile file: "results.txt", text: "${results}"
-        ret = readFile("results.txt").trim()
-        echo ret
         commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```")
     }
 }
