@@ -20,14 +20,13 @@ def call() {
             if (modifiedFiles.isEmpty()) {
                 sh "echo 'No files to validate' > results.txt"
             } else {
-                echo "test for new commit 1"
-                results = sh(
-                    returnStdout: true, 
-                    script: "validate-ocp-build-data ${modifiedFiles.join(" ")}"
-                )
-                echo "${results}"
+                echo "test for new commit 2"
+                sh( "validate-ocp-build-data ${modifiedFiles.join(" ")} > results.txt 2>&1"
             }
         }
+
+        results = readFile("results.txt").trim()
+        echo results
         commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```")
     }
 }
