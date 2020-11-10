@@ -11,6 +11,13 @@ RUN yum install -y \
   libgit2 \
   openssl-devel \
   rpm-devel \
+  wget \
+  mailx \
+  postfix \
+  rhpkg \
+  krb5-server \
+  krb5-libs \
+  krb5-workstation \
   python3-{devel,pip,pygit2}
 
 # Those environment variables are required to install pycurl, koji, and rpkg with pip
