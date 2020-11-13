@@ -14,8 +14,6 @@ RUN yum install -y \
   wget \
   mailx \
   postfix \
-  rhpkg \
-  krb5-server \
   krb5-libs \
   krb5-workstation \
   python3-{devel,pip,pygit2}
