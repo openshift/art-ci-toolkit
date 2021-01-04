@@ -18,6 +18,10 @@ RUN yum install -y \
   krb5-workstation \
   python3-{devel,pip,pygit2}
 
+ADD http://download.devel.redhat.com/rel-eng/RCMTOOLS/rcm-tools-rhel-8-baseos.repo /etc/yum.repos.d/
+# rhpkd didn't in default repo, and to use extra repo need switch off ssl check
+RUN echo "sslverify=false" >> /etc/yum.conf; yum install -y rhpkg
+
 # Those environment variables are required to install pycurl, koji, and rpkg with pip
 ENV PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true
 
