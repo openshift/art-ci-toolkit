@@ -31,7 +31,7 @@ RUN echo "sslverify=false" >> /etc/yum.conf && \
   python3-{devel,pygit2} rhpkg && \
   yum autoremove && yum clean all && \
   PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true pip3 --no-cache-dir install \
-  koji tox twine setuptools wheel codecov future \
+  koji tox twine wheel codecov future \
   rh-doozer rh-elliott rh-ocp-build-data-validator
 
 CMD ["tox"]
