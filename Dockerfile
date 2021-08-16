@@ -11,6 +11,7 @@ ADD ./pulp.repo /etc/yum.repos.d/
 # ENV PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true
 # add yum autoremove and yum clean all at the end of install package step
 # add --no-cache-dir for pip3 command to reduce cache
+# add --ignore-installed because pip was failing to replace previously installed PyYAML
 RUN echo "sslverify=false" >> /etc/yum.conf && \
   rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
   yum install -y \
@@ -28,9 +29,10 @@ RUN echo "sslverify=false" >> /etc/yum.conf && \
   mailx \
   postfix \
   krb5-workstation \
-  python3-{devel,pygit2} rhpkg && \
+  python3-{devel,pygit2,cryptography} rhpkg && \
   yum autoremove && yum clean all && \
-  PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true pip3 --no-cache-dir install \
+  pip3 install --upgrade pip && \
+  PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true pip3 --no-cache-dir install --ignore-installed \
   koji tox twine wheel codecov future \
   rh-doozer rh-elliott rh-ocp-build-data-validator
 
