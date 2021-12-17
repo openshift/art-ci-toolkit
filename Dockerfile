@@ -1,6 +1,6 @@
-FROM registry.redhat.io/ubi8/ubi
+FROM registry.access.redhat.com/ubi8/ubi:latest
 
-# rhpkg included in rcm-tools-rhel-8-baseos.repo 
+# rhpkg included in rcm-tools-rhel-8-baseos.repo
 ADD http://download.devel.redhat.com/rel-eng/RCMTOOLS/rcm-tools-rhel-8-baseos.repo /etc/yum.repos.d/
 
 # Some dependencies need CentOS repo
