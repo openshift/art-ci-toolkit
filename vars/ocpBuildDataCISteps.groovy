@@ -26,6 +26,6 @@ def call() {
 
         results = readFile("results.txt").trim()
         echo results
-        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```")
+        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```\n${currentBuild.changeSets}\n")
     }
 }
