@@ -26,6 +26,6 @@ def call() {
 
         results = readFile("results.txt").trim()
         echo results
-        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```\n${env.BUILD_URL}")
+        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```")
     }
 }
