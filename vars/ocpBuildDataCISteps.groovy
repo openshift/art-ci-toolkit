@@ -26,15 +26,6 @@ def call() {
 
         results = readFile("results.txt").trim()
         echo results
-        String msg = ""
-        def changeLogSets = currentBuild.changeSets
-        for (int i = 0; i < changeLogSets.size(); i++) {
-            def entries = changeLogSets[i].items
-            for (int j = 0; j < entries.length; j++) {
-                def entry = entries[j]
-                msg = msg + "${entry.commitId}\n"
-            }
-        }
-        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```\n${msg}\n")
+        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```")
     }
 }
