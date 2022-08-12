@@ -1,39 +1,40 @@
 FROM registry.access.redhat.com/ubi8/ubi:latest
 
-# rhpkg included in rcm-tools-rhel-8-baseos.repo
-ADD http://download.devel.redhat.com/rel-eng/RCMTOOLS/rcm-tools-rhel-8-baseos.repo /etc/yum.repos.d/
+# Trust the Red Hat IT Root CA and set up rcm-tools repo
+RUN curl -o /etc/pki/ca-trust/source/anchors/RH-IT-Root-CA.crt --fail -L \
+         https://password.corp.redhat.com/RH-IT-Root-CA.crt \
+ && update-ca-trust extract
 
-# Some dependencies need CentOS repo
-ADD ./pulp.repo /etc/yum.repos.d/
+# Install epel repo
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+# Install additional repos
+COPY assets/repos/ /etc/yum.repos.d/
 
-# To use extra repo need switch off ssl check
-# Those environment variables are required to install pycurl, koji, and rpkg with pip
-# ENV PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true
-# add yum autoremove and yum clean all at the end of install package step
-# add --no-cache-dir for pip3 command to reduce cache
-# add --ignore-installed because pip was failing to replace previously installed PyYAML
-RUN echo "sslverify=false" >> /etc/yum.conf && \
-  rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm && \
+# Install dependencies
+RUN \
   yum install -y \
-  @python36 \
-  gcc \
-  gcc-c++ \
-  git \
-  jq \
-  krb5-devel \
-  libcurl-devel \
-  libgit2 \
-  openssl-devel \
-  rpm-devel \
-  wget \
-  mailx \
-  postfix \
-  krb5-workstation \
-  python3-{devel,pygit2,cryptography} rhpkg && \
+    @python38 \
+    gcc \
+    gcc-c++ \
+    git \
+    jq \
+    krb5-devel \
+    libcurl-devel \
+    libgit2 \
+    openssl-devel \
+    wget \
+    mailx \
+    postfix \
+    krb5-workstation \
+    python38-{devel,wheel,cryptography} rhpkg && \
   yum autoremove && yum clean all && \
-  pip3 install --upgrade pip && \
-  PYCURL_SSL_LIBRARY=openssl RPM_PY_SYS=true pip3 --no-cache-dir install --ignore-installed \
-  koji tox twine wheel codecov future \
-  rh-doozer rh-elliott rh-ocp-build-data-validator
+  update-alternatives --set python3 /usr/bin/python3.8
+RUN \
+  python3 -m pip --no-cache-dir install pip>=21 setuptools>=45 && \
+  python3 -m pip --no-cache-dir install --ignore-installed \
+    koji tox twine wheel codecov future \
+    git+https://github.com/openshift/doozer.git \
+    git+https://github.com/openshift/elliott.git \
+    git+https://github.com/openshift/ocp-build-data-validator.git
 
 CMD ["tox"]
