@@ -26,6 +26,11 @@ def call() {
 
         results = readFile("results.txt").trim()
         echo results
-        commentOnPullRequest(msg: "### Build <span>#</span>${env.BUILD_NUMBER}\n```\n${results}\n```")
+        if (env.CHANGE_ID) {
+        if (results =~ /commands succeeded/) {
+            addCILabel()
+        } else {
+            removeCILabel()
+        }
     }
 }
